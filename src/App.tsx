@@ -1,26 +1,28 @@
-import { BrowserRouter, Route, Routes } from 'react-router'
-import HomePage from './pages/HomePage'
-import AuthPage from './pages/AuthPage'
-import DashboardLayout from './components/layout/DashboardLayout'
-import DashboardPage from './pages/DashboardPage'
-import TasksPage from './pages/TasksPage'
-import TaskDetailsPage from './pages/TaskDetailsPage'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AuthProvider from "./context/AuthProvider";
+import ProtectedRoute from "./components/routing/ProtectedRoute";
+import PublicOnlyRoute from "./components/routing/PublicOnlyRoute";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/register" element={<AuthPage />} />
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/tasks" element={<TasksPage />} />
-          <Route path="/tasks/:id" element={<TaskDetailsPage />} />
-        </Route> 
-      </Routes>
-    </BrowserRouter>
-  )
-}
+      <AuthProvider>
+        <Routes>
+          <Route element={<PublicOnlyRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
 
-export default App
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<DashboardPage />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
