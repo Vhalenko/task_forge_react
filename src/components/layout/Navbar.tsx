@@ -18,6 +18,14 @@ export default function Navbar() {
             <NavLink to="/" end className={linkClass}>
               Tasks
             </NavLink>
+            <NavLink to="/projects" className={linkClass}>
+              Projects
+            </NavLink>
+            {user?.role === "ADMIN" && (
+              <NavLink to="/admin/teams" className={linkClass}>
+                Admin
+              </NavLink>
+            )}
           </nav>
         </div>
 

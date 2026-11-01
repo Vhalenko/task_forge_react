@@ -1,39 +1,9 @@
-import { useEffect, useState } from "react";
-import * as taskApi from "../api/taskApi";
-import { parseApiError } from "../utils/apiError";
-import type { Task } from "../types/task";
+import { useMemo } from "react";
+import { getMyTasks } from "../api/taskApi";
+import { useAsyncData } from "./useAsyncData";
 
 export function useMyTasks() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [reloadKey, setReloadKey] = useState(0);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    taskApi
-      .getMyTasks()
-      .then((data) => {
-        if (!cancelled) setTasks(data);
-      })
-      .catch((err) => {
-        if (!cancelled) setError(parseApiError(err).message);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [reloadKey]);
-
-  const reload = () => {
-    setLoading(true);
-    setError("");
-    setReloadKey((key) => key + 1);
-  };
-
+  const { data, loading, error, reload } = useAsyncData(getMyTasks);
+  const tasks = useMemo(() => data ?? [], [data]);
   return { tasks, loading, error, reload };
 }
