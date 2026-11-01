@@ -7,6 +7,9 @@ export interface User {
   username: string;
   email: string;
   role: UserRole;
+  teamId: number | null;
+  teamName: string | null;
+  blocked: boolean;
 }
 
 export interface LoginRequest {

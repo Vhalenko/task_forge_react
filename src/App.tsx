@@ -1,10 +1,19 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AuthProvider from "./context/AuthProvider";
+import AdminRoute from "./components/routing/AdminRoute";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import PublicOnlyRoute from "./components/routing/PublicOnlyRoute";
+import AppLayout from "./components/layout/AppLayout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import DashboardPage from "./pages/DashboardPage";
+import TasksPage from "./pages/TasksPage";
+import NewTaskPage from "./pages/NewTaskPage";
+import TaskDetailsPage from "./pages/TaskDetailsPage";
+import EditTaskPage from "./pages/EditTaskPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import ProjectPage from "./pages/ProjectPage";
+import AdminTeamsPage from "./pages/admin/AdminTeamsPage";
+import AdminTeamPage from "./pages/admin/AdminTeamPage";
 
 export default function App() {
   return (
@@ -17,7 +26,19 @@ export default function App() {
           </Route>
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<TasksPage />} />
+              <Route path="/tasks/new" element={<NewTaskPage />} />
+              <Route path="/tasks/:taskId" element={<TaskDetailsPage />} />
+              <Route path="/tasks/:taskId/edit" element={<EditTaskPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/projects/:projectId" element={<ProjectPage />} />
+
+              <Route element={<AdminRoute />}>
+                <Route path="/admin/teams" element={<AdminTeamsPage />} />
+                <Route path="/admin/teams/:teamId" element={<AdminTeamPage />} />
+              </Route>
+            </Route>
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
