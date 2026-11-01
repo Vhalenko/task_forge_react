@@ -6,11 +6,11 @@ export default function AppLayout() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white antialiased">
+    <div className="min-h-screen bg-ink-950 antialiased">
       <Navbar />
-      <main className="mx-auto max-w-4xl px-6 py-10">
+      <main className="mx-auto max-w-[1440px] px-5 py-8 lg:ml-64 lg:px-10 lg:py-10">
         {user && !user.teamId && (
-          <div className="mb-8 rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
+          <div className="mb-6 rounded-xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
             You are not in a team yet. Ask an admin to add you using your email address.
           </div>
         )}

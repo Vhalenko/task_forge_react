@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import * as projectApi from "../../api/projectApi";
 import * as teamApi from "../../api/teamApi";
@@ -16,6 +16,9 @@ import type { User } from "../../types/auth";
 
 function AdminTeamView({ teamId }: { teamId: number }) {
   const { user: me } = useAuth();
+  const [tab, setTab] = useState<"members" | "projects">("members");
+  const [email, setEmail] = useState("");
+  const [inviteMessage, setInviteMessage] = useState("");
 
   const fetchTeam = useCallback(() => teamApi.getTeam(teamId), [teamId]);
   const fetchUsers = useCallback(() => teamApi.getTeamUsers(teamId), [teamId]);
@@ -37,6 +40,19 @@ function AdminTeamView({ teamId }: { teamId: number }) {
   const handleDeleteProject = async (id: number) => {
     await projectApi.deleteProject(id);
     projectsState.setData((prev) => (prev ?? []).filter((project) => project.id !== id));
+  };
+
+  const handleInvite = async (event: FormEvent) => {
+    event.preventDefault();
+    setInviteMessage("");
+    try {
+      const member = await teamApi.inviteUser(teamId, email);
+      usersState.setData((prev) => [...(prev ?? []).filter((item) => item.id !== member.id), member]);
+      setEmail("");
+      setInviteMessage("User added to the team.");
+    } catch {
+      setInviteMessage("We couldn't find or add this email address.");
+    }
   };
 
   function renderMembers() {
@@ -115,13 +131,19 @@ function AdminTeamView({ teamId }: { teamId: number }) {
       </div>
       <PageHeader title={teamState.data?.name ?? "Team"} />
 
-      <section>
-        <h2 className="mb-2 text-lg font-semibold tracking-tight text-neutral-900">Members</h2>
-        {renderMembers()}
-      </section>
+      <div className="mb-6 flex gap-1 rounded-xl border border-white/8 bg-ink-900 p-1">
+        <button onClick={() => setTab("members")} className={`rounded-lg px-4 py-2 text-sm ${tab === "members" ? "bg-white/10 text-white" : "text-ink-400"}`}>Members</button>
+        <button onClick={() => setTab("projects")} className={`rounded-lg px-4 py-2 text-sm ${tab === "projects" ? "bg-white/10 text-white" : "text-ink-400"}`}>Projects</button>
+      </div>
 
-      <section className="mt-12">
-        <h2 className="mb-4 text-lg font-semibold tracking-tight text-neutral-900">Projects</h2>
+      {tab === "members" ? <section>
+        <div className="mb-4 rounded-2xl border border-accent/20 bg-accent/5 p-4">
+          <div className="mb-3"><h2 className="text-sm font-semibold text-white">Invite a teammate</h2><p className="mt-1 text-xs text-ink-400">Add an existing TaskForge account by email.</p></div>
+          <form onSubmit={handleInvite} className="flex flex-col gap-2 sm:flex-row"><input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="teammate@company.com" className="min-w-0 flex-1 rounded-lg border border-white/10 bg-ink-800 px-3 py-2 text-sm text-white outline-none placeholder:text-ink-400 focus:border-accent" /><button className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-ink-950 hover:bg-accent-strong">Add to team</button></form>{inviteMessage && <p className="mt-2 text-xs text-accent">{inviteMessage}</p>}
+        </div>
+        {renderMembers()}
+      </section> : <section>
+        <h2 className="mb-4 text-lg font-semibold tracking-tight text-white">Projects</h2>
         <div className="mb-4 max-w-md">
           <NameForm
             label="Project name"
@@ -131,7 +153,7 @@ function AdminTeamView({ teamId }: { teamId: number }) {
           />
         </div>
         {renderProjects()}
-      </section>
+      </section>}
     </div>
   );
 }

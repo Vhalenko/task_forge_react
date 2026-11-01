@@ -11,18 +11,18 @@ export default function TaskRow({ task }: { task: Task }) {
     <li>
       <Link
         to={`/tasks/${task.id}`}
-        className="-mx-3 flex flex-col gap-3 rounded-md px-3 py-4 transition hover:bg-neutral-50 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+        className="flex flex-col gap-3 rounded-xl border border-white/8 bg-ink-900 px-4 py-4 transition hover:border-accent/30 hover:bg-ink-800 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
       >
         <div className="min-w-0">
           <p
             className={`truncate text-sm font-medium ${
-              task.status === "DONE" ? "text-neutral-400 line-through" : "text-neutral-900"
+              task.status === "DONE" ? "text-ink-400 line-through" : "text-white"
             }`}
           >
             {task.title}
           </p>
           {task.description && (
-            <p className="mt-0.5 truncate text-sm text-neutral-500">{task.description}</p>
+            <p className="mt-0.5 truncate text-sm text-ink-400">{task.description}</p>
           )}
         </div>
 
@@ -31,7 +31,7 @@ export default function TaskRow({ task }: { task: Task }) {
           <StatusBadge status={task.status} />
           <span
             className={`w-24 text-right text-xs ${
-              overdue ? "font-medium text-red-600" : "text-neutral-500"
+              overdue ? "font-medium text-rose-300" : "text-ink-400"
             }`}
           >
             {task.dueDate ? formatDate(task.dueDate) : "No due date"}

@@ -14,6 +14,7 @@ import ProjectsPage from "./pages/ProjectsPage";
 import ProjectPage from "./pages/ProjectPage";
 import AdminTeamsPage from "./pages/admin/AdminTeamsPage";
 import AdminTeamPage from "./pages/admin/AdminTeamPage";
+import ProfilePage from "./pages/ProfilePage";
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
               <Route path="/tasks/:taskId/edit" element={<EditTaskPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/projects/:projectId" element={<ProjectPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
 
               <Route element={<AdminRoute />}>
                 <Route path="/admin/teams" element={<AdminTeamsPage />} />

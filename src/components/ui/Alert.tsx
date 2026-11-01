@@ -6,8 +6,8 @@ interface AlertProps {
 }
 
 const STYLES = {
-  error: "border-red-200 bg-red-50 text-red-700",
-  success: "border-green-200 bg-green-50 text-green-700",
+  error: "border-red-400/20 bg-red-400/10 text-red-200",
+  success: "border-accent/20 bg-accent/10 text-accent",
 } as const;
 
 export default function Alert({ variant = "error", children }: AlertProps) {

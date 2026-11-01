@@ -49,7 +49,7 @@ export default function TaskBrowser({
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="text-sm font-medium text-neutral-900 underline underline-offset-4"
+              className="text-sm font-medium text-accent underline underline-offset-4"
             >
               Clear filters
             </button>
@@ -66,7 +66,7 @@ export default function TaskBrowser({
       <TaskToolbar filters={filters} onChange={setFilters} />
 
       {!loading && !error && tasks.length > 0 && (
-        <p className="mt-4 text-sm text-neutral-500">
+        <p className="mt-4 text-sm text-ink-400">
           {hasActiveFilters(filters)
             ? `${visible.length} of ${tasks.length} tasks`
             : `${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`}

@@ -25,13 +25,13 @@ function ProjectsView({ teamId, teamName }: { teamId: number; teamName: string |
       );
     }
 
-    return (
-      <ul className="divide-y divide-neutral-200 border-y border-neutral-200">
+      return (
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <li key={project.id}>
             <Link
               to={`/projects/${project.id}`}
-              className="-mx-3 block rounded-md px-3 py-4 text-sm font-medium text-neutral-900 transition hover:bg-neutral-50"
+              className="block rounded-2xl border border-white/8 bg-ink-900 p-5 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:border-accent/40"
             >
               {project.name}
             </Link>
