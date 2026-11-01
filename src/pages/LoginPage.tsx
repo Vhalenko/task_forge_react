@@ -10,7 +10,7 @@ export default function LoginPage() {
       footer={
         <>
           No account yet?{" "}
-          <Link to="/register" className="font-medium text-neutral-900 underline underline-offset-4">
+          <Link to="/register" className="font-medium text-accent underline underline-offset-4 hover:text-accent-strong">
             Create one
           </Link>
         </>
