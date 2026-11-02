@@ -1,4 +1,5 @@
 import Alert from "./Alert";
+import Button from "./Button";
 
 interface ErrorStateProps {
   message: string;
@@ -7,15 +8,11 @@ interface ErrorStateProps {
 
 export default function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <Alert>{message}</Alert>
-      <button
-        type="button"
-        onClick={onRetry}
-        className="text-sm font-medium text-neutral-900 underline underline-offset-4"
-      >
+      <Button type="button" variant="secondary" fullWidth={false} onClick={onRetry}>
         Try again
-      </button>
+      </Button>
     </div>
   );
 }

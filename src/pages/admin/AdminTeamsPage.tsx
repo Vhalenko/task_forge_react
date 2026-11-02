@@ -31,31 +31,35 @@ export default function AdminTeamsPage() {
     }
 
     return (
-      <ul className="divide-y divide-neutral-200 border-y border-neutral-200">
-        {list.map((team) => (
-          <li key={team.id} className="flex items-center justify-between gap-4 py-4">
-            <Link
-              to={`/admin/teams/${team.id}`}
-              className="min-w-0 truncate text-sm font-medium text-neutral-900 underline-offset-4 hover:underline"
-            >
-              {team.name}
-            </Link>
-            <ConfirmAction
-              label="Delete"
-              question="Delete this team?"
-              confirmLabel="Yes, delete"
-              onConfirm={() => handleDelete(team.id)}
-            />
-          </li>
-        ))}
-      </ul>
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 px-5">
+        <ul className="divide-y divide-white/10">
+          {list.map((team) => (
+            <li key={team.id} className="flex items-center justify-between gap-4 py-4">
+              <Link
+                to={`/admin/teams/${team.id}`}
+                className="min-w-0 truncate rounded-md text-sm font-medium text-ink-100 underline-offset-4 transition hover:text-accent hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                {team.name}
+              </Link>
+              <ConfirmAction
+                label="Delete"
+                question="Delete this team?"
+                confirmLabel="Yes, delete"
+                onConfirm={() => handleDelete(team.id)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 
   return (
     <div>
       <PageHeader title="Teams" subtitle="Create teams and manage their members and projects." />
-      <div className="mb-8 max-w-md">
+
+      <div className="mb-8 max-w-xl rounded-2xl border border-white/10 bg-ink-900/60 p-4 sm:p-5">
+        <h2 className="mb-3 text-sm font-semibold text-white">Create a team</h2>
         <NameForm
           label="Team name"
           placeholder="New team name"
@@ -63,6 +67,7 @@ export default function AdminTeamsPage() {
           onSubmit={handleCreate}
         />
       </div>
+
       {renderContent()}
     </div>
   );

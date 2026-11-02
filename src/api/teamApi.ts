@@ -20,3 +20,6 @@ export const getTeamProjects = (id: number) =>
 
 export const createProject = (teamId: number, payload: ProjectRequest) =>
   api.post<Project>(`/teams/${teamId}/projects`, payload).then((res) => res.data);
+
+export const inviteUser = (teamId: number, email: string) =>
+  api.post<User>(`/teams/${teamId}/invitations`, { email }).then((res) => res.data);

@@ -35,22 +35,30 @@ export default function MemberRow({ member, isSelf, onChange }: MemberRowProps) 
   return (
     <li className="py-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-neutral-900">
-            {member.firstName} {member.lastName}
-            {isSelf && <span className="font-normal text-neutral-500"> (you)</span>}
-          </p>
-          <p className="truncate text-sm text-neutral-500">{member.email}</p>
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="grid size-9 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-xs font-semibold text-ink-200"
+          >
+            {member.firstName?.[0] ?? "U"}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-white">
+              {member.firstName} {member.lastName}
+              {isSelf && <span className="font-normal text-ink-400"> (you)</span>}
+            </p>
+            <p className="truncate text-sm text-ink-400">{member.email}</p>
+          </div>
         </div>
 
-        <div className="flex shrink-0 flex-wrap items-center gap-4 text-sm">
+        <div className="flex shrink-0 flex-wrap items-center gap-3 text-sm">
           {member.role === "ADMIN" && (
-            <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white">
+            <span className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-xs font-medium text-white">
               Admin
             </span>
           )}
           {member.blocked && (
-            <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">
+            <span className="rounded-full border border-rose-400/25 bg-rose-400/10 px-2.5 py-0.5 text-xs font-medium text-rose-200">
               Blocked
             </span>
           )}
@@ -68,7 +76,7 @@ export default function MemberRow({ member, isSelf, onChange }: MemberRowProps) 
                 type="button"
                 onClick={toggleBlocked}
                 disabled={busy}
-                className="text-neutral-500 hover:text-neutral-900 disabled:opacity-50"
+                className="rounded-md text-ink-400 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
               >
                 {member.blocked ? "Unblock" : "Block"}
               </button>
@@ -77,7 +85,7 @@ export default function MemberRow({ member, isSelf, onChange }: MemberRowProps) 
         </div>
       </div>
 
-      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-xs font-medium text-rose-300">{error}</p>}
     </li>
   );
 }

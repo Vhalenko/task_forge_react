@@ -2,9 +2,9 @@ import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as taskApi from "../api/taskApi";
 import TaskForm from "../components/tasks/TaskForm";
-import Alert from "../components/ui/Alert";
 import BackLink from "../components/ui/BackLink";
 import EmptyState from "../components/ui/EmptyState";
+import ErrorState from "../components/ui/ErrorState";
 import Spinner from "../components/ui/Spinner";
 import { useAsyncData } from "../hooks/useAsyncData";
 import { useAuth } from "../hooks/useAuth";
@@ -21,18 +21,7 @@ function EditTaskView({ taskId }: { taskId: number }) {
     if (loading) return <Spinner />;
 
     if (error || !task) {
-      return (
-        <div className="space-y-4">
-          <Alert>{error || "Task not found."}</Alert>
-          <button
-            type="button"
-            onClick={reload}
-            className="text-sm font-medium text-neutral-900 underline underline-offset-4"
-          >
-            Try again
-          </button>
-        </div>
-      );
+      return <ErrorState message={error || "Task not found."} onRetry={reload} />;
     }
 
     if (!canManageTask(task, user)) {
@@ -59,12 +48,14 @@ function EditTaskView({ taskId }: { taskId: number }) {
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-3xl">
       <div className="mb-6">
         <BackLink to={`/tasks/${taskId}`}>Task</BackLink>
       </div>
-      <h1 className="mb-8 text-2xl font-semibold tracking-tight text-neutral-900">Edit task</h1>
-      <div className="max-w-xl">{renderContent()}</div>
+      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-white sm:text-3xl">Edit task</h1>
+      <div className="rounded-2xl border border-white/10 bg-ink-900/70 p-5 shadow-[0_24px_60px_-40px_rgb(0_0_0/0.9)] sm:p-7">
+        {renderContent()}
+      </div>
     </div>
   );
 }
@@ -78,7 +69,7 @@ export default function EditTaskPage() {
       <EmptyState
         title="Task not found"
         description="This link does not point to a task."
-        action={<BackLink to="/">My tasks</BackLink>}
+        action={<BackLink to="/tasks">My tasks</BackLink>}
       />
     );
   }

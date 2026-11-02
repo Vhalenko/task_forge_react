@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { parseApiError } from "../../utils/apiError";
 import Button from "../ui/Button";
+import { errorClass, fieldClass } from "../ui/fieldStyles";
 
 interface NameFormProps {
   label: string;
@@ -42,7 +43,7 @@ export default function NameForm({ label, placeholder, submitLabel, onSubmit }: 
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <input
           aria-label={label}
           placeholder={placeholder}
@@ -51,17 +52,13 @@ export default function NameForm({ label, placeholder, submitLabel, onSubmit }: 
             setName(e.target.value);
             setError("");
           }}
-          className={`block min-w-0 flex-1 rounded-md border bg-white px-3 py-2 text-sm text-neutral-900 outline-hidden transition placeholder:text-neutral-400 focus:ring-1 ${
-            error
-              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-              : "border-neutral-300 focus:border-neutral-900 focus:ring-neutral-900"
-          }`}
+          className={fieldClass(Boolean(error), "min-w-0 flex-1")}
         />
         <Button type="submit" loading={submitting} fullWidth={false} className="shrink-0">
           {submitLabel}
         </Button>
       </div>
-      {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
+      {error && <p className={errorClass}>{error}</p>}
     </form>
   );
 }

@@ -148,14 +148,14 @@ export default function TaskForm({
         />
       </div>
 
-      <div className="flex items-center gap-4 pt-2">
+      <div className="flex items-center gap-4 border-t border-white/10 pt-5">
         <Button type="submit" loading={submitting} fullWidth={false}>
           {submitLabel}
         </Button>
         <button
           type="button"
           onClick={onCancel}
-          className="text-sm text-neutral-500 hover:text-neutral-900"
+          className="rounded-md text-sm text-ink-400 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           Cancel
         </button>

@@ -4,9 +4,9 @@ import * as taskApi from "../api/taskApi";
 import CommentSection from "../components/comments/CommentSection";
 import TaskActions from "../components/tasks/TaskActions";
 import TaskDetails from "../components/tasks/TaskDetails";
-import Alert from "../components/ui/Alert";
 import BackLink from "../components/ui/BackLink";
 import EmptyState from "../components/ui/EmptyState";
+import ErrorState from "../components/ui/ErrorState";
 import Spinner from "../components/ui/Spinner";
 import { useAsyncData } from "../hooks/useAsyncData";
 
@@ -18,18 +18,7 @@ function TaskDetailsView({ taskId }: { taskId: number }) {
     if (loading) return <Spinner />;
 
     if (error || !task) {
-      return (
-        <div className="space-y-4">
-          <Alert>{error || "Task not found."}</Alert>
-          <button
-            type="button"
-            onClick={reload}
-            className="text-sm font-medium text-neutral-900 underline underline-offset-4"
-          >
-            Try again
-          </button>
-        </div>
-      );
+      return <ErrorState message={error || "Task not found."} onRetry={reload} />;
     }
 
     return (
@@ -46,9 +35,9 @@ function TaskDetailsView({ taskId }: { taskId: number }) {
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-4xl">
       <div className="mb-6">
-        <BackLink to="/">My tasks</BackLink>
+        <BackLink to="/tasks">My tasks</BackLink>
       </div>
       {renderContent()}
     </div>
@@ -64,7 +53,7 @@ export default function TaskDetailsPage() {
       <EmptyState
         title="Task not found"
         description="This link does not point to a task."
-        action={<BackLink to="/">My tasks</BackLink>}
+        action={<BackLink to="/tasks">My tasks</BackLink>}
       />
     );
   }

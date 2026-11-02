@@ -26,14 +26,47 @@ function ProjectsView({ teamId, teamName }: { teamId: number; teamName: string |
     }
 
     return (
-      <ul className="divide-y divide-neutral-200 border-y border-neutral-200">
+      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <li key={project.id}>
             <Link
               to={`/projects/${project.id}`}
-              className="-mx-3 block rounded-md px-3 py-4 text-sm font-medium text-neutral-900 transition hover:bg-neutral-50"
+              className="group flex h-full flex-col justify-between rounded-2xl border border-white/10 bg-ink-900/70 p-5 transition hover:-translate-y-0.5 hover:border-accent/35 hover:bg-ink-850 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              {project.name}
+              <span className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="grid size-9 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-accent"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.7}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-4"
+                  >
+                    <path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h3l2 2.5h7A2.5 2.5 0 0 1 20.5 10v6.5A2.5 2.5 0 0 1 18 19H6a2.5 2.5 0 0 1-2.5-2.5z" />
+                  </svg>
+                </span>
+                <span className="min-w-0 truncate text-sm font-medium text-white">{project.name}</span>
+              </span>
+              <span className="mt-6 flex items-center gap-1.5 text-xs font-medium text-ink-400 transition group-hover:text-accent">
+                Open board
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-3.5"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </span>
             </Link>
           </li>
         ))}

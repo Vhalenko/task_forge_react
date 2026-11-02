@@ -8,7 +8,7 @@ export default function PublicOnlyRoute() {
   const state = location.state as AuthLocationState | null;
 
   if (isAuthenticated) {
-    return <Navigate to={state?.from?.pathname ?? "/"} replace />;
+    return <Navigate to={state?.from?.pathname ?? "/tasks"} replace />;
   }
   return <Outlet />;
 }
