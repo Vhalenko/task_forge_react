@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { parseApiError } from "../../utils/apiError";
 import Alert from "../ui/Alert";
 import Button from "../ui/Button";
+import { fieldClass } from "../ui/fieldStyles";
 
 const MAX_LENGTH = 2000;
 
@@ -61,7 +62,7 @@ export default function CommentForm({
           setText(e.target.value);
           setError("");
         }}
-        className="block w-full resize-y rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 outline-hidden transition placeholder:text-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
+        className={fieldClass(false, "min-h-24 resize-y")}
       />
       <Alert>{error}</Alert>
       <div className="flex items-center gap-4">
@@ -72,7 +73,7 @@ export default function CommentForm({
           <button
             type="button"
             onClick={onCancel}
-            className="text-sm text-neutral-500 hover:text-neutral-900"
+            className="rounded-md text-sm text-ink-400 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             Cancel
           </button>

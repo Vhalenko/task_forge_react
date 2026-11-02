@@ -31,6 +31,7 @@ export default function TaskBrowser({
 }: TaskBrowserProps) {
   const [filters, setFilters] = useState<TaskFilters>(DEFAULT_FILTERS);
   const visible = useMemo(() => applyTaskFilters(tasks, filters), [tasks, filters]);
+  const filtering = hasActiveFilters(filters);
 
   function renderContent() {
     if (loading) return <Spinner />;
@@ -49,7 +50,7 @@ export default function TaskBrowser({
             <button
               type="button"
               onClick={() => setFilters(DEFAULT_FILTERS)}
-              className="text-sm font-medium text-accent underline underline-offset-4"
+              className="rounded-md text-sm font-semibold text-accent underline underline-offset-4 transition hover:text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
               Clear filters
             </button>
@@ -66,11 +67,25 @@ export default function TaskBrowser({
       <TaskToolbar filters={filters} onChange={setFilters} />
 
       {!loading && !error && tasks.length > 0 && (
-        <p className="mt-4 text-sm text-ink-400">
-          {hasActiveFilters(filters)
-            ? `${visible.length} of ${tasks.length} tasks`
-            : `${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`}
-        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-3 px-1 text-sm text-ink-400">
+          <p>
+            {filtering
+              ? `${visible.length} of ${tasks.length} tasks`
+              : `${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`}
+          </p>
+          {filtering && (
+            <>
+              <span aria-hidden="true" className="h-3 w-px bg-white/15" />
+              <button
+                type="button"
+                onClick={() => setFilters(DEFAULT_FILTERS)}
+                className="rounded-md text-xs font-medium text-accent underline underline-offset-4 transition hover:text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                Clear filters
+              </button>
+            </>
+          )}
+        </div>
       )}
 
       <div className="mt-4">{renderContent()}</div>

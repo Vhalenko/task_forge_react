@@ -6,19 +6,27 @@ import MemberRow from "../../components/admin/MemberRow";
 import NameForm from "../../components/admin/NameForm";
 import PageHeader from "../../components/layout/PageHeader";
 import BackLink from "../../components/ui/BackLink";
+import Button from "../../components/ui/Button";
 import ConfirmAction from "../../components/ui/ConfirmAction";
 import EmptyState from "../../components/ui/EmptyState";
 import ErrorState from "../../components/ui/ErrorState";
 import Spinner from "../../components/ui/Spinner";
+import { fieldClass } from "../../components/ui/fieldStyles";
 import { useAsyncData } from "../../hooks/useAsyncData";
 import { useAuth } from "../../hooks/useAuth";
 import type { User } from "../../types/auth";
+
+const tabClass = (active: boolean) =>
+  `rounded-lg px-4 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+    active ? "bg-white/10 text-white shadow-sm" : "text-ink-400 hover:text-white"
+  }`;
 
 function AdminTeamView({ teamId }: { teamId: number }) {
   const { user: me } = useAuth();
   const [tab, setTab] = useState<"members" | "projects">("members");
   const [email, setEmail] = useState("");
   const [inviteMessage, setInviteMessage] = useState("");
+  const [inviteError, setInviteError] = useState(false);
 
   const fetchTeam = useCallback(() => teamApi.getTeam(teamId), [teamId]);
   const fetchUsers = useCallback(() => teamApi.getTeamUsers(teamId), [teamId]);
@@ -45,12 +53,14 @@ function AdminTeamView({ teamId }: { teamId: number }) {
   const handleInvite = async (event: FormEvent) => {
     event.preventDefault();
     setInviteMessage("");
+    setInviteError(false);
     try {
       const member = await teamApi.inviteUser(teamId, email);
       usersState.setData((prev) => [...(prev ?? []).filter((item) => item.id !== member.id), member]);
       setEmail("");
       setInviteMessage("User added to the team.");
     } catch {
+      setInviteError(true);
       setInviteMessage("We couldn't find or add this email address.");
     }
   };
@@ -67,16 +77,18 @@ function AdminTeamView({ teamId }: { teamId: number }) {
     }
 
     return (
-      <ul className="divide-y divide-neutral-200 border-y border-neutral-200">
-        {members.map((member) => (
-          <MemberRow
-            key={member.id}
-            member={member}
-            isSelf={member.id === me?.id}
-            onChange={replaceMember}
-          />
-        ))}
-      </ul>
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 px-5">
+        <ul className="divide-y divide-white/10">
+          {members.map((member) => (
+            <MemberRow
+              key={member.id}
+              member={member}
+              isSelf={member.id === me?.id}
+              onChange={replaceMember}
+            />
+          ))}
+        </ul>
+      </div>
     );
   }
 
@@ -92,24 +104,26 @@ function AdminTeamView({ teamId }: { teamId: number }) {
     }
 
     return (
-      <ul className="divide-y divide-neutral-200 border-y border-neutral-200">
-        {projects.map((project) => (
-          <li key={project.id} className="flex items-center justify-between gap-4 py-4">
-            <Link
-              to={`/projects/${project.id}`}
-              className="min-w-0 truncate text-sm font-medium text-neutral-900 underline-offset-4 hover:underline"
-            >
-              {project.name}
-            </Link>
-            <ConfirmAction
-              label="Delete"
-              question="Delete this project?"
-              confirmLabel="Yes, delete"
-              onConfirm={() => handleDeleteProject(project.id)}
-            />
-          </li>
-        ))}
-      </ul>
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 px-5">
+        <ul className="divide-y divide-white/10">
+          {projects.map((project) => (
+            <li key={project.id} className="flex items-center justify-between gap-4 py-4">
+              <Link
+                to={`/projects/${project.id}`}
+                className="min-w-0 truncate rounded-md text-sm font-medium text-ink-100 underline-offset-4 transition hover:text-accent hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                {project.name}
+              </Link>
+              <ConfirmAction
+                label="Delete"
+                question="Delete this project?"
+                confirmLabel="Yes, delete"
+                onConfirm={() => handleDeleteProject(project.id)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 
@@ -129,31 +143,83 @@ function AdminTeamView({ teamId }: { teamId: number }) {
       <div className="mb-6">
         <BackLink to="/admin/teams">Teams</BackLink>
       </div>
-      <PageHeader title={teamState.data?.name ?? "Team"} />
+      <PageHeader
+        title={teamState.data?.name ?? "Team"}
+        subtitle="Manage team members, roles, and projects."
+      />
 
-      <div className="mb-6 flex gap-1 rounded-xl border border-white/8 bg-ink-900 p-1">
-        <button onClick={() => setTab("members")} className={`rounded-lg px-4 py-2 text-sm ${tab === "members" ? "bg-white/10 text-white" : "text-ink-400"}`}>Members</button>
-        <button onClick={() => setTab("projects")} className={`rounded-lg px-4 py-2 text-sm ${tab === "projects" ? "bg-white/10 text-white" : "text-ink-400"}`}>Projects</button>
+      <div
+        role="group"
+        aria-label="Team sections"
+        className="mb-6 inline-flex gap-1 rounded-xl border border-white/10 bg-ink-900/70 p-1"
+      >
+        <button
+          type="button"
+          onClick={() => setTab("members")}
+          aria-pressed={tab === "members"}
+          className={tabClass(tab === "members")}
+        >
+          Members
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("projects")}
+          aria-pressed={tab === "projects"}
+          className={tabClass(tab === "projects")}
+        >
+          Projects
+        </button>
       </div>
 
-      {tab === "members" ? <section>
-        <div className="mb-4 rounded-2xl border border-accent/20 bg-accent/5 p-4">
-          <div className="mb-3"><h2 className="text-sm font-semibold text-white">Invite a teammate</h2><p className="mt-1 text-xs text-ink-400">Add an existing TaskForge account by email.</p></div>
-          <form onSubmit={handleInvite} className="flex flex-col gap-2 sm:flex-row"><input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="teammate@company.com" className="min-w-0 flex-1 rounded-lg border border-white/10 bg-ink-800 px-3 py-2 text-sm text-white outline-none placeholder:text-ink-400 focus:border-accent" /><button className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-ink-950 hover:bg-accent-strong">Add to team</button></form>{inviteMessage && <p className="mt-2 text-xs text-accent">{inviteMessage}</p>}
-        </div>
-        {renderMembers()}
-      </section> : <section>
-        <h2 className="mb-4 text-lg font-semibold tracking-tight text-white">Projects</h2>
-        <div className="mb-4 max-w-md">
-          <NameForm
-            label="Project name"
-            placeholder="New project name"
-            submitLabel="Add project"
-            onSubmit={handleCreateProject}
-          />
-        </div>
-        {renderProjects()}
-      </section>}
+      {tab === "members" ? (
+        <section>
+          <div className="mb-5 rounded-2xl border border-accent/20 bg-accent/[0.05] p-4 sm:p-5">
+            <div className="mb-3">
+              <h2 className="text-sm font-semibold text-white">Invite a teammate</h2>
+              <p className="mt-1 text-xs leading-5 text-ink-400">
+                Add an existing TaskForge account by email.
+              </p>
+            </div>
+            <form onSubmit={handleInvite} className="flex flex-col gap-2 sm:flex-row">
+              <input
+                required
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="teammate@company.com"
+                aria-label="Teammate email"
+                className={fieldClass(false, "min-w-0 flex-1")}
+              />
+              <Button type="submit" fullWidth={false} className="shrink-0">
+                Add to team
+              </Button>
+            </form>
+            {inviteMessage && (
+              <p
+                className={`mt-2.5 text-xs font-medium ${
+                  inviteError ? "text-rose-300" : "text-accent"
+                }`}
+              >
+                {inviteMessage}
+              </p>
+            )}
+          </div>
+          {renderMembers()}
+        </section>
+      ) : (
+        <section>
+          <h2 className="mb-3 text-lg font-semibold tracking-tight text-white">Projects</h2>
+          <div className="mb-5 max-w-xl rounded-2xl border border-white/10 bg-ink-900/60 p-4 sm:p-5">
+            <NameForm
+              label="Project name"
+              placeholder="New project name"
+              submitLabel="Add project"
+              onSubmit={handleCreateProject}
+            />
+          </div>
+          {renderProjects()}
+        </section>
+      )}
     </div>
   );
 }

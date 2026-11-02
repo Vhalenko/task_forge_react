@@ -34,12 +34,12 @@ export default function ConfirmAction({
       <div className="flex items-center gap-3 text-sm">
         {confirming ? (
           <>
-            <span className="text-neutral-500">{question}</span>
+            <span className="text-ink-300">{question}</span>
             <button
               type="button"
               onClick={handleConfirm}
               disabled={busy}
-              className="font-medium text-red-600 hover:text-red-700 disabled:opacity-50"
+              className="rounded-md font-medium text-rose-300 transition hover:text-rose-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
             >
               {busy ? "Please wait…" : confirmLabel}
             </button>
@@ -47,7 +47,7 @@ export default function ConfirmAction({
               type="button"
               onClick={() => setConfirming(false)}
               disabled={busy}
-              className="text-neutral-500 hover:text-neutral-900"
+              className="rounded-md text-ink-400 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
             >
               Cancel
             </button>
@@ -56,13 +56,13 @@ export default function ConfirmAction({
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="text-neutral-500 hover:text-neutral-900"
+            className="rounded-md text-ink-400 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             {label}
           </button>
         )}
       </div>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs font-medium text-rose-300">{error}</p>}
     </div>
   );
 }

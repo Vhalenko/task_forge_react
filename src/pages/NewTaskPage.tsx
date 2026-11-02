@@ -50,18 +50,20 @@ function NewTaskView({ teamId }: { teamId: number }) {
           );
           navigate(`/tasks/${created.id}`);
         }}
-        onCancel={() => navigate("/")}
+        onCancel={() => navigate("/tasks")}
       />
     );
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-3xl">
       <div className="mb-6">
-        <BackLink to="/">My tasks</BackLink>
+        <BackLink to="/tasks">My tasks</BackLink>
       </div>
-      <h1 className="mb-8 text-2xl font-semibold tracking-tight text-neutral-900">New task</h1>
-      <div className="max-w-xl">{renderContent()}</div>
+      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-white sm:text-3xl">New task</h1>
+      <div className="rounded-2xl border border-white/10 bg-ink-900/70 p-5 shadow-[0_24px_60px_-40px_rgb(0_0_0/0.9)] sm:p-7">
+        {renderContent()}
+      </div>
     </div>
   );
 }
@@ -74,7 +76,7 @@ export default function NewTaskPage() {
       <EmptyState
         title="Join a team first"
         description="You need to be in a team before you can create tasks. Ask an admin to add you."
-        action={<BackLink to="/">My tasks</BackLink>}
+        action={<BackLink to="/tasks">My tasks</BackLink>}
       />
     );
   }

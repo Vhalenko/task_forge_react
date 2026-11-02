@@ -11,6 +11,9 @@ interface TaskActionsProps {
   onTaskChange: (task: Task) => void;
 }
 
+const actionClass =
+  "rounded-md text-ink-300 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+
 export default function TaskActions({ task, onTaskChange }: TaskActionsProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -42,7 +45,7 @@ export default function TaskActions({ task, onTaskChange }: TaskActionsProps) {
     setError("");
     try {
       await taskApi.deleteTask(task.id);
-      navigate("/", { replace: true });
+      navigate("/tasks", { replace: true });
     } catch (err) {
       setError(parseApiError(err).message);
       setDeleting(false);
@@ -51,13 +54,13 @@ export default function TaskActions({ task, onTaskChange }: TaskActionsProps) {
 
   return (
     <div className="flex flex-col items-start gap-2 sm:items-end">
-      <div className="flex flex-wrap items-center gap-4 text-sm">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         {!isAssigned && (
           <button
             type="button"
             onClick={handleAssign}
             disabled={assigning}
-            className="font-medium text-neutral-900 underline underline-offset-4 hover:text-neutral-600 disabled:opacity-50"
+            className="rounded-md font-semibold text-accent underline underline-offset-4 transition hover:text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
           >
             {assigning ? "Assigning…" : "Assign to me"}
           </button>
@@ -65,17 +68,10 @@ export default function TaskActions({ task, onTaskChange }: TaskActionsProps) {
 
         {canManage && !confirmingDelete && (
           <>
-            <Link
-              to={`/tasks/${task.id}/edit`}
-              className="text-neutral-500 hover:text-neutral-900"
-            >
+            <Link to={`/tasks/${task.id}/edit`} className={actionClass}>
               Edit
             </Link>
-            <button
-              type="button"
-              onClick={() => setConfirmingDelete(true)}
-              className="text-neutral-500 hover:text-neutral-900"
-            >
+            <button type="button" onClick={() => setConfirmingDelete(true)} className={actionClass}>
               Delete
             </button>
           </>
@@ -83,12 +79,12 @@ export default function TaskActions({ task, onTaskChange }: TaskActionsProps) {
 
         {canManage && confirmingDelete && (
           <>
-            <span className="text-neutral-500">Delete this task?</span>
+            <span className="text-ink-300">Delete this task?</span>
             <button
               type="button"
               onClick={handleDelete}
               disabled={deleting}
-              className="font-medium text-red-600 hover:text-red-700 disabled:opacity-50"
+              className="rounded-md font-semibold text-rose-300 transition hover:text-rose-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
             >
               {deleting ? "Deleting…" : "Yes, delete"}
             </button>
@@ -96,7 +92,7 @@ export default function TaskActions({ task, onTaskChange }: TaskActionsProps) {
               type="button"
               onClick={() => setConfirmingDelete(false)}
               disabled={deleting}
-              className="text-neutral-500 hover:text-neutral-900"
+              className={actionClass}
             >
               Cancel
             </button>
@@ -104,7 +100,7 @@ export default function TaskActions({ task, onTaskChange }: TaskActionsProps) {
         )}
       </div>
 
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs font-medium text-rose-300">{error}</p>}
     </div>
   );
 }

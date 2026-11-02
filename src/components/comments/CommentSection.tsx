@@ -3,6 +3,7 @@ import * as commentApi from "../../api/commentApi";
 import { useAsyncData } from "../../hooks/useAsyncData";
 import { useAuth } from "../../hooks/useAuth";
 import Alert from "../ui/Alert";
+import Button from "../ui/Button";
 import Spinner from "../ui/Spinner";
 import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
@@ -32,15 +33,11 @@ export default function CommentSection({ taskId }: { taskId: number }) {
 
     if (error) {
       return (
-        <div className="mt-4 space-y-4">
+        <div className="mt-4 space-y-3">
           <Alert>{error}</Alert>
-          <button
-            type="button"
-            onClick={reload}
-            className="text-sm font-medium text-neutral-900 underline underline-offset-4"
-          >
+          <Button type="button" variant="secondary" fullWidth={false} onClick={reload}>
             Try again
-          </button>
+          </Button>
         </div>
       );
     }
@@ -49,23 +46,27 @@ export default function CommentSection({ taskId }: { taskId: number }) {
 
     return (
       <>
-        {list.length === 0 ? (
-          <p className="mt-4 text-sm text-neutral-500">No comments yet.</p>
-        ) : (
-          <ul className="mt-2 divide-y divide-neutral-200">
-            {list.map((comment) => (
-              <CommentItem
-                key={comment.id}
-                comment={comment}
-                isOwn={comment.createdById === user?.id}
-                onUpdate={handleUpdate}
-                onDelete={handleDelete}
-              />
-            ))}
-          </ul>
-        )}
+        <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 px-5">
+          {list.length === 0 ? (
+            <p className="py-8 text-center text-sm text-ink-400">
+              No comments yet. Start the conversation below.
+            </p>
+          ) : (
+            <ul className="divide-y divide-white/10">
+              {list.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  isOwn={comment.createdById === user?.id}
+                  onUpdate={handleUpdate}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </ul>
+          )}
+        </div>
 
-        <div className="mt-6 border-t border-neutral-200 pt-6">
+        <div className="mt-4 rounded-2xl border border-white/10 bg-ink-900/60 p-4 sm:p-5">
           <CommentForm
             submitLabel="Comment"
             placeholder="Write a comment…"
@@ -78,9 +79,16 @@ export default function CommentSection({ taskId }: { taskId: number }) {
 
   return (
     <section aria-labelledby="comments-heading">
-      <h2 id="comments-heading" className="text-lg font-semibold tracking-tight text-neutral-900">
-        Comments{comments && comments.length > 0 ? ` (${comments.length})` : ""}
-      </h2>
+      <div className="flex items-center gap-2.5">
+        <h2 id="comments-heading" className="text-lg font-semibold tracking-tight text-white">
+          Comments
+        </h2>
+        {comments && comments.length > 0 && (
+          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-medium text-ink-300">
+            {comments.length}
+          </span>
+        )}
+      </div>
       {renderBody()}
     </section>
   );
